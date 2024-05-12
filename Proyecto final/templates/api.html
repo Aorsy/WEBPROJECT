@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+      API 
+{% endblock %}
+
+{% block content %}
+
+    <nav class="navbar bg-primary mt-5">
+        <div class="container-fluid">
+            <h2 class="text-light">GIPHY</H2>
+                <form action="/api" method="POST">
+                    <div class="d-flex">
+                       <input type="search" class="form-control" name="search">
+                       <button class="btn btn-dark mx-3" type="submit">Buscar</button> 
+                    </div>
+                </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row row-col-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 mt-3">
+           
+            {% for gif in data %}
+                <p>{{gif}}</p>
+            {% endfor %}
+           </div>
+        </div>
+    </div>
+{% endblock %}
