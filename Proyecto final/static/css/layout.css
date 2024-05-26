@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: "Dancing Script", cursive;
 }
 
 .c-item{
@@ -23,3 +23,21 @@
     margin-right: .75rem;
     margin-left: .75rem;
   }
+
+body{
+    background: linear-gradient(to right, #e2e2e2, #c9d6ff);
+}
+
+.buscar{
+    position: relative;
+    margin-top: 8%;
+    max-width: 50%;
+    margin-left: 30%;
+    
+}
+.btn-buscar
+{
+    position: relative;
+    margin-left: 50%;
+}
+

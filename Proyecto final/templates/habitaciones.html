@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Habitaciones de Hotel
+{% endblock %}
+
+{% block content %}
+    <div class="buscar">
+        <form action="/habitaciones" method="POST">
+            <input type="search" class="form-control" name="city_name" placeholder="Ingrese el nombre de la ciudad">
+            <button class="btn btn-dark mx-3" type="submit">Buscar</button>
+        </form>
+    </div>
+    <div class="container mt-3">
+        <div class="row">
+            {% if data %}
+                {% for offer in data %}
+                    <div class="col-12 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <p><strong>Hotel Name:</strong> {{ offer.hotel.name }}</p>
+                                <p><strong>City Code:</strong> {{ offer.hotel.cityCode }}</p>
+                                <p><strong>Check-in:</strong> {{ offer.offers[0].checkInDate }}</p>
+                                <p><strong>Check-out:</strong> {{ offer.offers[0].checkOutDate }}</p>
+                                <p><strong>Price:</strong> {{ offer.offers[0].price.total }} {{ offer.offers[0].price.currency }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No se encontraron habitaciones disponibles para esta ciudad.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

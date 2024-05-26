@@ -1,30 +1,37 @@
 {% extends "layout.html" %}
 
 {% block title %}
-      API 
+    Estadisticas 
 {% endblock %}
 
 {% block content %}
-
-    <nav class="navbar bg-primary mt-5">
-        <div class="container-fluid">
-            <h2 class="text-light">GIPHY</H2>
-                <form action="/api" method="POST">
-                    <div class="d-flex">
-                       <input type="search" class="form-control" name="search">
-                       <button class="btn btn-dark mx-3" type="submit">Buscar</button> 
+    <div class="buscar">
+        <form action="/api" method="POST">
+            <input type="buscar" class="form-control" name="buscar" placeholder="Ingrese el nombre del Hotel">
+            <button class="btn btn-dark mx-3" type="submit">Buscar</button>
+        </form>
+    </div>
+    <div class="container mt-3">
+        <div class="row">
+            {% if data %}
+                {% for item in data %}
+                    <div class="col-12 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                {% for key, value in item.items() %}
+                                    {% if key != 'localizacion' %}
+                                        {% if key == 'nombre' %}
+                                            <p><strong>{{ key|capitalize }}:</strong> {{ value.upper() }}</p>
+                                        {% else %}
+                                            <p><strong>{{ key|capitalize }}:</strong> {{ value }}</p>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                </form>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="row row-col-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-4 mt-3">
-           
-            {% for gif in data %}
-                <p>{{gif}}</p>
-            {% endfor %}
-           </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
