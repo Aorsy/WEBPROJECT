@@ -14,8 +14,8 @@ amadeus = Client(
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = ''
-app.config['MYSQL_PORT'] =  3308
+app.config['MYSQL_DB'] = 'hotel'
+app.config['MYSQL_PORT'] =  3306
 
 city_mapping = {
     'New York': 'NYC',
@@ -32,9 +32,86 @@ mysql = MySQL(app)
 def index():
     return render_template('index.html')
 
-@app.route('/login')
+#CRUD - insertar
+@app.route('/login', methods=['GET','POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'POST':
+        #Acceso a los campos del formulario
+        nombre = request.form['nombre']
+        cedula = request.form['cedula']
+        email = request.form['email']
+        password = request.form['password']
+    
+        cursor = mysql.connection.cursor()
+        #Instrucción SQL
+        cursor.execute("INSERT INTO huesped VALUES(%s, %s, %s, %s)", (nombre, cedula, email, password))
+            
+        #El commit finaliza la transacción actual
+        cursor.connection.commit()      
+       
+        #Redirecciona al index luego de ejecutar el formulario       
+        return redirect(url_for('index'))    
+    
+    cursor = mysql.connection.cursor()
+    #Consula SQL
+    cursor.execute("SELECT * FROM huesped")
+    #Recorrido de la información almaceda en coches
+    huesped = cursor.fetchall()
+    #Cierre de cursor
+    cursor.close() 
+    return render_template('login.html', huesped=huesped)
+
+
+@app.route('/login-editar/<cedula>', methods=['GET','POST'])
+def login_editar(cedula):
+    if request.method == 'POST':
+        
+        #Acceso a los campos del formulario
+        nombre = request.form['nombre']
+        nueva_cedula = request.form['cedula']
+        email = request.form['email']
+        password = request.form['password']
+        
+        #cargue de cursor SQL
+        cursor = mysql.connection.cursor()
+        #Instrucción SQL
+        cursor.execute("""
+            UPDATE huesped
+            SET nombre=%s, cedula=%s, email=%s, password=%s WHERE cedula = %s
+                       """, (nombre, nueva_cedula, email, password, cedula))
+        
+        #cursor.execute("UPDATE coches SET placa = %s, marca = %s, modelo = %s, precio = %s, ciudad = %s WHERE placa = %s", (placa, marca, modelo, precio, ciudad, placa_id))
+
+        #El commit finaliza la transacción actual
+        cursor.connection.commit()        
+               
+        #Redirecciona al index luego de ejecutar el formulario       
+        return redirect(url_for('login'))    
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM huesped WHERE cedula = %s", (cedula,))
+    huesped = cursor.fetchall()
+    #Cierre de cursor
+    cursor.close()
+    
+    return render_template('login.html', huesped=huesped) 
+
+@app.route('/login-eliminar/<cedula>')
+def login_eliminar(cedula):
+    #cargue de cursor SQL
+    cursor = mysql.connection.cursor()
+    #Instrucción SQL con clausula WHERE
+    #cursor.execute(f"DELETE FROM coches WHERE placa={placa_id}")
+    cursor.execute("DELETE FROM huesped WHERE cedula = %s", (cedula,))
+    
+
+    #El commit finaliza la transacción actual
+    mysql.connection.commit() 
+    
+    return redirect(url_for('login')) 
+
+
+###########################################################
 
 @app.route('/habitaciones', methods=['GET', 'POST'])
 def habitaciones():
