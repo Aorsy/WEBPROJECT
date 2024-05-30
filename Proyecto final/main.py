@@ -14,18 +14,10 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'hotel'
-<<<<<<< HEAD
 app.config['MYSQL_PORT'] =  3306
-=======
 
+#Almacenamiento de la conexión en una variable
 mysql = MySQL(app)
-
-try:
-    cursor = mysql.connection.cursor()
-    # Resto del código aquí
-except Exception as e:
-    print(f"Error al establecer la conexión a la base de datos: {e}")
->>>>>>> 717a89f1fbf715ae390159ee674315f45e6a81e2
 
 city_mapping = {
     'New York': 'NYC',
@@ -158,23 +150,6 @@ def api():
             data = response.json()
     return render_template('api.html', data=data)
 
-@app.route('/registro', methods=['GET','POST'])
-def registro():
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        email = request.form['email']
-        password = request.form['password']
-
-        cursor = mysql.connection.cursor()
-        #Instrucción SQL
-        cursor.execute("INSERT INTO usuarios VALUES(NULL, %s, %s, %s)", (nombre, email, password))
-        #El commit finaliza la transacción actual
-        cursor.connection.commit()        
-        
-        #Redirecciona al index luego de ejecutar el formulario       
-        return redirect(url_for('index'))        
-    
-    return render_template('login.html')
 
 if __name__ == '__main__':
      app.run(debug=True)
